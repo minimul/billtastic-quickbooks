@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= @msg %></title>
+</head>
+<body>
+<h3><%= @msg %></h3>
+
+<script>
+ setTimeout(function(){ window.opener.location = '<%= @url %>'; window.close(); }, 10000);
+</script>
+</body>
+</html>
