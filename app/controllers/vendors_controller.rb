@@ -1,5 +1,6 @@
 class VendorsController < ApplicationController
   before_action :set_vendor, only: [:show, :edit, :update, :destroy]
+  before_action :set_qb_service, only: [:create, :edit, :update, :destroy]
 
   # GET /vendors
   # GET /vendors.json
@@ -88,6 +89,13 @@ class VendorsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def vendor_params
       params.require(:vendor).permit(:name)
+    end
+
+    def set_qb_service
+      oauth_client = OAuth::AccessToken.new($qb_oauth_consumer, session[:token], session[:secret])
+      @vendor_service = Quickeebooks::Online::Service::Vendor.new
+      @vendor_service.access_token = oauth_client
+      @vendor_service.realm_id = session[:realm_id]
     end
 
 end
