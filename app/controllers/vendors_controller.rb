@@ -26,7 +26,10 @@ class VendorsController < ApplicationController
   # POST /vendors.json
   def create
     @vendor = Vendor.new(vendor_params)
-
+    vendor = Quickeebooks::Online::Model::Vendor.new
+    vendor.name = vendor_params[:name]
+    vendor.email_address = vendor_params[:email_address]
+    @vendor_service.create(vendor)
     respond_to do |format|
       if @vendor.save
         format.html { redirect_to @vendor, notice: 'Vendor was successfully created.' }
@@ -43,6 +46,9 @@ class VendorsController < ApplicationController
   def update
     respond_to do |format|
       if @vendor.update(vendor_params)
+        vendor = @vendor_service.list.entries.find{ |e| e.name == vendor_params[:name] }
+        vendor.email_address = vendor_params[:email_address]
+        @vendor_service.update(vendor)
         format.html { redirect_to @vendor, notice: 'Vendor was successfully updated.' }
         format.json { head :no_content }
       else
@@ -88,7 +94,7 @@ class VendorsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def vendor_params
-      params.require(:vendor).permit(:name)
+      params.require(:vendor).permit(:name, :email_address)
     end
 
     def set_qb_service
