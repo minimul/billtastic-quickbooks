@@ -29,7 +29,7 @@ class VendorsController < ApplicationController
     vendor = Quickeebooks::Online::Model::Vendor.new
     vendor.name = vendor_params[:name]
     vendor.email_address = vendor_params[:email_address]
-    @vendor_service.create(vendor)
+    @service.create(vendor)
     respond_to do |format|
       if @vendor.save
         format.html { redirect_to @vendor, notice: 'Vendor was successfully created.' }
@@ -46,9 +46,9 @@ class VendorsController < ApplicationController
   def update
     respond_to do |format|
       if @vendor.update(vendor_params)
-        vendor = @vendor_service.list.entries.find{ |e| e.name == vendor_params[:name] }
+        vendor = @service.list.entries.find{ |e| e.name == vendor_params[:name] }
         vendor.email_address = vendor_params[:email_address]
-        @vendor_service.update(vendor)
+        @service.update(vendor)
         format.html { redirect_to @vendor, notice: 'Vendor was successfully updated.' }
         format.json { head :no_content }
       else
@@ -68,24 +68,6 @@ class VendorsController < ApplicationController
     end
   end
 
-  def authenticate
-    callback = oauth_callback_vendors_url
-    token = $qb_oauth_consumer.get_request_token(:oauth_callback => callback)
-    session[:qb_request_token] = token
-    redirect_to("https://appcenter.intuit.com/Connect/Begin?oauth_token=#{token.token}") and return
-  end
-
-  def oauth_callback
-    at = session[:qb_request_token].get_access_token(:oauth_verifier => params[:oauth_verifier])
-    session[:token] = at.token
-    session[:secret] = at.secret
-    session[:realm_id] = params['realmId']
-    flash.notice = "Your QuickBooks account has been successfully linked."
-    @msg = 'Redirecting. Please wait.'
-    @url = vendors_path
-    render 'close_and_redirect', layout: false
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_vendor
@@ -95,13 +77,6 @@ class VendorsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def vendor_params
       params.require(:vendor).permit(:name, :email_address)
-    end
-
-    def set_qb_service
-      oauth_client = OAuth::AccessToken.new($qb_oauth_consumer, session[:token], session[:secret])
-      @vendor_service = Quickeebooks::Online::Service::Vendor.new
-      @vendor_service.access_token = oauth_client
-      @vendor_service.realm_id = session[:realm_id]
     end
 
 end

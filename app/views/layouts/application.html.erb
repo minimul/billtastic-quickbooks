@@ -10,6 +10,10 @@
   <!-- ipp:connectToIntuit is the Intuit Connect button -->
   <% unless session[:token] %>
     <ipp:connectToIntuit></ipp:connectToIntuit>
+  <% else %>
+    <div>
+      <a href="">Disconnect from QuickBooks</a>
+    </div>
   <% end %>
 
   <% if notice %>
@@ -21,7 +25,7 @@
   <script type="text/javascript" src="https://appcenter.intuit.com/Content/IA/intuit.ipp.anywhere.js"></script>
   <!-- configure the Intuit object: 'grantUrl' is a URL in your application which kicks off the flow, see below -->
   <script>
-      intuit.ipp.anywhere.setup({menuProxy: '/path/to/blue-dot', grantUrl: '<%= authenticate_vendors_url %>'});
+      intuit.ipp.anywhere.setup({menuProxy: '/path/to/blue-dot', grantUrl: '<%= authenticate_quickbooks_url %>'});
   </script>
 
 
