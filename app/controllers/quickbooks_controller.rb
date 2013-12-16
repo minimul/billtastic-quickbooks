@@ -15,10 +15,21 @@ class QuickbooksController < ApplicationController
     flash.notice = "Your QuickBooks account has been successfully linked."
     @msg = 'Redirecting. Please wait.'
     @url = vendors_path
-    render 'close_and_redirect', layout: false
+    render 'vendors/close_and_redirect', layout: false
   end
 
   def disconnect
+    set_qb_service('AccessToken')
+    result = @service.disconnect
+    if result.error_code == '270'
+      msg = 'Disconnect failed as OAuth token is invalid. Try connecting again.'
+    else
+      msg = 'Successfully disconnected from QuickBooks'
+    end
+    session[:token] = nil
+    session[:secret] = nil
+    session[:realm_id] = nil
+    redirect_to vendors_path, notice: msg
   end
 
 end
