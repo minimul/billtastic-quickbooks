@@ -4,6 +4,7 @@ Billtastic::Application.routes.draw do
     collection do
       get :authenticate
       get :oauth_callback
+      get :disconnect
     end
   end
 end
