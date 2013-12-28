@@ -1,4 +1,5 @@
 Billtastic::Application.routes.draw do
+  devise_for :users
   resources :vendors
   resources :quickbooks do
     collection do
@@ -7,4 +8,5 @@ Billtastic::Application.routes.draw do
       get :disconnect
     end
   end
+  root to: 'vendors#index' 
 end
