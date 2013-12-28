@@ -1,3 +1,4 @@
+require 'openid/store/filesystem'
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -225,6 +226,7 @@ Devise.setup do |config|
   config.sign_out_via = :delete
 
   # ==> OmniAuth
+  config.omniauth :open_id, :store => OpenID::Store::Filesystem.new('/tmp'), :name => 'intuit', :identifier => 'https://openid.intuit.com/openid/xrds', :require => 'omniauth-openid'
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'

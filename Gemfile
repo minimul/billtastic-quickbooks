@@ -12,6 +12,7 @@ gem 'sass-rails', '~> 4.0.0'
 # Needed for QuickBooks integration
 gem 'quickeebooks'
 gem 'oauth-plugin'
+gem 'omniauth-openid'
 
 gem 'devise'
 
