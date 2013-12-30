@@ -14,7 +14,8 @@
       <%= link_to "Sign out", destroy_user_session_path, method: :delete %>
     <% else %>
       <%= link_to "Sign up", new_user_registration_path %> |
-      <%= link_to "Sign in", new_user_session_path %>
+      <%= link_to "Sign in", new_user_session_path %> |
+      <ipp:login href="<%= user_omniauth_authorize_path(:intuit) %>"></ipp:login>
     <% end %>
   </section>
   <!-- ipp:connectToIntuit is the Intuit Connect button -->
@@ -36,8 +37,9 @@
   <!-- configure the Intuit object: 'grantUrl' is a URL in your application which kicks off the flow, see below -->
   <script>
       intuit.ipp.anywhere.setup({menuProxy: '/path/to/blue-dot', grantUrl: '<%= authenticate_quickbooks_url %>'});
+  <% if user_signed_in? && !session[:token] %>
+      intuit.ipp.anywhere.directConnectToIntuit();
+  <% end %>
   </script>
-
-
 </body>
 </html>
